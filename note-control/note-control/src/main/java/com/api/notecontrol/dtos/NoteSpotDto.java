@@ -16,16 +16,6 @@ public class NoteSpotDto {
     @NotBlank
     @Size(max = 200)
     private String description_note;
-    @NotBlank
-    private String user_note;
-
-    public String getUser_note() {
-        return user_note;
-    }
-
-    public void setUser_note(String user_note) {
-        this.user_note = user_note;
-    }
 
     public String getTitle_note() {
         return title_note;

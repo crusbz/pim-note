@@ -2,9 +2,11 @@ package com.api.notecontrol.controllers;
 
 import com.api.notecontrol.dtos.NoteSpotDto;
 import com.api.notecontrol.models.NoteSpotModel;
+import com.api.notecontrol.models.UserSpotModel;
 import com.api.notecontrol.services.NoteSpotService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
@@ -12,9 +14,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import org.springframework.data.domain.Pageable;
+import java.lang.annotation.Target;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -29,31 +32,29 @@ public class NoteSpotController {
         this.noteSpotService = noteSpotService;
     }
 
-    @PostMapping
-    public ResponseEntity<Object> saveNoteSpot(@RequestBody @Valid NoteSpotDto noteSpotDto){
-        var noteSpotModel = new NoteSpotModel();
-        BeanUtils.copyProperties(noteSpotDto, noteSpotModel);
+    @PostMapping()
+    public ResponseEntity<Object> saveNoteSpot(@RequestBody NoteSpotModel noteSpotModel){
         noteSpotModel.setCreated_at(LocalDateTime.now(ZoneId.of("UTC")));
         return ResponseEntity.status(HttpStatus.CREATED).body(noteSpotService.save(noteSpotModel));
     }
 
-    @GetMapping
-    public ResponseEntity<Page<NoteSpotModel>> getAllNoteSpots(@PageableDefault(page = 0, size = 10, sort = "id", direction = Sort.Direction.ASC)Pageable pageable) {
-        return ResponseEntity.status(HttpStatus.OK).body(noteSpotService.findAll(pageable));
+    @GetMapping("/{userId}")
+    public ResponseEntity<Object> getOneUserAllNotesSpot(@PathVariable(value = "userId") UserSpotModel userId){
+        List<NoteSpotModel> noteSpotModel = noteSpotService.findUserAllNotes(userId);
+        return ResponseEntity.status(HttpStatus.OK).body(noteSpotModel);
     }
-
-    @GetMapping("/{id}")
-    public ResponseEntity<Object> getOneParkingSpot(@PathVariable(value = "id") UUID id){
-        Optional<NoteSpotModel> noteSpotModel = noteSpotService.findById(id);
+    @GetMapping("/{userId}/{id_note}")
+    public ResponseEntity<Object> getOneNoteSpot(@PathVariable(value = "id_note") UUID id, @PathVariable(value = "userId") UserSpotModel userId){
+        Optional<NoteSpotModel> noteSpotModel = noteSpotService.findById(userId, id);
         if (!noteSpotModel.isPresent()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Note Spot not found.");
         }
         return ResponseEntity.status(HttpStatus.OK).body(noteSpotModel.get());
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Object> deleteParkingSpot(@PathVariable(value = "id") UUID id){
-        Optional<NoteSpotModel> noteSpotModelOptional = noteSpotService.findById(id);
+    @DeleteMapping("/{userId}/{id}")
+    public ResponseEntity<Object> deleteNoteSpot(@PathVariable(value = "id") UUID id, @PathVariable(value = "userId") UserSpotModel userId){
+        Optional<NoteSpotModel> noteSpotModelOptional = noteSpotService.findById(userId, id);
         if (!noteSpotModelOptional.isPresent()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Parking Spot not found.");
         }
@@ -61,16 +62,15 @@ public class NoteSpotController {
         return ResponseEntity.status(HttpStatus.OK).body("Note Spot deleted successfully.");
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<Object> updateParkingSpot(@PathVariable(value = "id") UUID id, @RequestBody @Valid NoteSpotDto noteSpotDto){
-        Optional<NoteSpotModel> noteSpotModelOptional = noteSpotService.findById(id);
+    @PutMapping("/{userId}/{id}")
+    public ResponseEntity<Object> updateNoteSpot(@PathVariable(value = "id") UUID id, @PathVariable(value = "userId") UserSpotModel userId, @RequestBody NoteSpotModel noteSpotModel){
+        Optional<NoteSpotModel> noteSpotModelOptional = noteSpotService.findById(userId, id);
         if (!noteSpotModelOptional.isPresent()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Note Spot not found.");
         }
-        var noteSpotModel = new NoteSpotModel();
-        BeanUtils.copyProperties(noteSpotDto, noteSpotModel);
-        noteSpotModel.setId(noteSpotModelOptional.get().getId());
-        noteSpotModel.setCreated_at(noteSpotModelOptional.get().getCreated_at());
+        noteSpotModel.setUserId(userId);
+        noteSpotModel.setId(id);
+        noteSpotModel.setCreated_at(LocalDateTime.now(ZoneId.of("UTC")));
         return ResponseEntity.status(HttpStatus.OK).body(noteSpotService.save(noteSpotModel));
     }
 }

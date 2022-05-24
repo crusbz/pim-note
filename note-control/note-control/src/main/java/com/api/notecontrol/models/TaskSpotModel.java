@@ -17,26 +17,17 @@ public class TaskSpotModel implements Serializable {
     private String description_task;
     @Column(nullable = false, length = 70)
     private LocalDateTime created_at;
-    @Column()
-    private boolean status_task;
+    @Column(columnDefinition = "boolean default false")
+    private boolean done_task;
     @ManyToOne
     @JoinColumn(name="note_id", referencedColumnName = "id", nullable = false)
-    private NoteSpotModel noteSpotModel;
+    private NoteSpotModel noteId;
 
-    public boolean isStatus_task() {
-        return status_task;
+    public UUID getNoteId() {
+        return noteId.getId();
     }
-
-    public void setStatus_task(boolean status_task) {
-        this.status_task = status_task;
-    }
-
-    public NoteSpotModel getNoteSpotModel() {
-        return noteSpotModel;
-    }
-
-    public void setNoteSpotModel(NoteSpotModel noteSpotModel) {
-        this.noteSpotModel = noteSpotModel;
+    public void setNoteId(NoteSpotModel noteId) {
+        this.noteId = noteId;
     }
 
     public UUID getId() {
@@ -62,5 +53,13 @@ public class TaskSpotModel implements Serializable {
 
     public void setCreated_at(LocalDateTime created_at) {
         this.created_at = created_at;
+    }
+
+    public boolean isDone_task() {
+        return done_task;
+    }
+
+    public void setDone_task(boolean done_task) {
+        this.done_task = done_task;
     }
 }

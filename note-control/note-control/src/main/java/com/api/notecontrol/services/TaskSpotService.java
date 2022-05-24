@@ -1,12 +1,12 @@
 package com.api.notecontrol.services;
 
+import com.api.notecontrol.models.NoteSpotModel;
 import com.api.notecontrol.models.TaskSpotModel;
 import com.api.notecontrol.repositories.TaskSpotRepository;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -24,12 +24,14 @@ public class TaskSpotService {
         return taskSpotRepository.save(taskSpotModel);
     }
 
-    public Page<TaskSpotModel> findAll(Pageable pageable){
-        return taskSpotRepository.findAll(pageable);
+    public Optional<TaskSpotModel> findById(NoteSpotModel noteId, UUID id) {
+        Optional<TaskSpotModel> obj = taskSpotRepository.findByNoteIdAndId(noteId, id);
+        return obj;
     }
 
-    public Optional<TaskSpotModel> findById(UUID id) {
-        return taskSpotRepository.findById(id);
+    public List<TaskSpotModel> findNoteAllTasks(NoteSpotModel noteId) {
+        List<TaskSpotModel> obj = taskSpotRepository.findByNoteId(noteId);
+        return obj;
     }
 
     @Transactional

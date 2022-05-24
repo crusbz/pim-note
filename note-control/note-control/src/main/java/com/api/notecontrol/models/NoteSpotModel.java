@@ -22,15 +22,15 @@ public class NoteSpotModel implements Serializable {
     @Column(nullable = false, length = 70)
     private LocalDateTime created_at;
     @ManyToOne
-    @JoinColumn(name="user_note", referencedColumnName = "id")
-    private UserSpotModel user_note;
+    @JoinColumn(name="userId", referencedColumnName = "id")
+    private UserSpotModel userId;
 
-    public UserSpotModel getUser_note() {
-        return user_note;
+    public UUID getUserId() {
+        return userId.getId();
     }
 
-    public void setUser_note(UserSpotModel user_note) {
-        this.user_note = user_note;
+    public void setUserId(UserSpotModel userId) {
+        this.userId = userId;
     }
 
     public UUID getId() {
