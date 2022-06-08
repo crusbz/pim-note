@@ -10,6 +10,5 @@ import java.util.UUID;
 
 public interface NoteSpotRepository extends JpaRepository<NoteSpotModel, UUID> {
     List<NoteSpotModel> findByUserId(UserSpotModel userId);
-
     Optional<NoteSpotModel> findByUserIdAndId(UserSpotModel userId, UUID id);
 }

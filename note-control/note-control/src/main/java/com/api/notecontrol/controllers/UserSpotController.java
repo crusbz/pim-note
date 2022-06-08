@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -38,8 +39,8 @@ public class UserSpotController {
     }
 
     @GetMapping
-    public ResponseEntity<Page<UserSpotModel>> getAllUserSpots(@PageableDefault(page = 0, size = 10, sort = "id", direction = Sort.Direction.ASC) Pageable pageable) {
-        return ResponseEntity.status(HttpStatus.OK).body(userSpotService.findAll(pageable));
+    public ResponseEntity<List<UserSpotModel>> getAllUserSpots() {
+        return ResponseEntity.status(HttpStatus.OK).body(userSpotService.findAll());
     }
 
     @GetMapping("/{id}")

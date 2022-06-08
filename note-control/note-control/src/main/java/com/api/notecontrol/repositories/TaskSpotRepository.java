@@ -11,6 +11,5 @@ import java.util.UUID;
 public interface TaskSpotRepository extends JpaRepository<TaskSpotModel, UUID> {
 
     List<TaskSpotModel> findByNoteId(NoteSpotModel noteId);
-
     Optional<TaskSpotModel> findByNoteIdAndId(NoteSpotModel noteId, UUID id);
 }

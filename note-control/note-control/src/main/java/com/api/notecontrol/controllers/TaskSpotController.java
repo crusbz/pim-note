@@ -38,14 +38,14 @@ public class TaskSpotController {
         return ResponseEntity.status(HttpStatus.CREATED).body(taskSpotService.save(taskSpotModel));
     }
 
-    @GetMapping("/{noteId}")
-    public ResponseEntity<Object> getOneNoteAllTasksSpot(@PathVariable(value = "noteId") NoteSpotModel noteId) {
+    @GetMapping("/")
+    public ResponseEntity<Object> getOneNoteAllTasksSpot(@RequestHeader(value = "noteId") NoteSpotModel noteId) {
         List<TaskSpotModel> taskSpotModel = taskSpotService.findNoteAllTasks(noteId);
         return ResponseEntity.status(HttpStatus.OK).body(taskSpotModel);
     }
 
-    @GetMapping("/{noteId}/{taskId}")
-    public ResponseEntity<Object> getOneTaskSpot(@PathVariable(value = "noteId") NoteSpotModel noteId, @PathVariable(value = "taskId") UUID taskId){
+    @GetMapping("/{taskId}")
+    public ResponseEntity<Object> getOneTaskSpot(@RequestHeader(value = "noteId") NoteSpotModel noteId, @PathVariable(value = "taskId") UUID taskId){
         Optional<TaskSpotModel> taskSpotModel = taskSpotService.findById(noteId, taskId);
         if (!taskSpotModel.isPresent()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Note Spot not found.");
@@ -53,8 +53,8 @@ public class TaskSpotController {
         return ResponseEntity.status(HttpStatus.OK).body(taskSpotModel.get());
     }
 
-    @DeleteMapping("/{noteId}/{taskId}")
-    public ResponseEntity<Object> deleteTaskSpot(@PathVariable(value = "taskId") UUID taskId, @PathVariable(value = "noteId") NoteSpotModel noteId){
+    @DeleteMapping("/{taskId}")
+    public ResponseEntity<Object> deleteTaskSpot(@PathVariable(value = "taskId") UUID taskId, @RequestHeader(value = "noteId") NoteSpotModel noteId){
         Optional<TaskSpotModel> taskSpotModelOptional = taskSpotService.findById(noteId, taskId);
         if (!taskSpotModelOptional.isPresent()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Task Spot not found.");
@@ -63,8 +63,8 @@ public class TaskSpotController {
         return ResponseEntity.status(HttpStatus.OK).body("Task Spot deleted successfully.");
     }
 
-    @PutMapping("/{noteId}/{taskId}")
-    public ResponseEntity<Object> updateTaskSpot(@PathVariable(value = "taskId") UUID taskId, @PathVariable(value = "noteId") NoteSpotModel noteId, @RequestBody TaskSpotModel taskSpotModel){
+    @PutMapping("/{taskId}")
+    public ResponseEntity<Object> updateTaskSpot(@PathVariable(value = "taskId") UUID taskId, @RequestHeader(value = "noteId") NoteSpotModel noteId, @RequestBody TaskSpotModel taskSpotModel){
         Optional<TaskSpotModel> taskSpotModelOptional = taskSpotService.findById(noteId, taskId);
         if (!taskSpotModelOptional.isPresent()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Task Spot not found.");

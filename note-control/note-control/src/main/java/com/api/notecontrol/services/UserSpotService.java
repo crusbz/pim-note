@@ -9,6 +9,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -25,8 +26,8 @@ public class UserSpotService {
         return userSpotRepository.save(userSpotModel);
     }
 
-    public Page<UserSpotModel> findAll(Pageable pageable){
-        return userSpotRepository.findAll(pageable);
+    public List<UserSpotModel> findAll(){
+        return userSpotRepository.findAll();
     }
 
     public Optional<UserSpotModel> findById(UUID id) {

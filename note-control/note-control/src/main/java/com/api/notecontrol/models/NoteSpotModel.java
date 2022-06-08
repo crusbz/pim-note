@@ -1,5 +1,7 @@
 package com.api.notecontrol.models;
 
+import org.hibernate.annotations.Cascade;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -13,15 +15,16 @@ public class NoteSpotModel implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID id;
-    @Column(nullable = false, unique = false, length = 20)
+    @Column(nullable = false, length = 20)
     private String title_note;
     @Column(length = 200)
     private String description_note;
-    @Column(nullable = false, unique = false, length = 20)
+    @Column(nullable = false, length = 20)
     private String category_note;
     @Column(nullable = false, length = 70)
     private LocalDateTime created_at;
-    @ManyToOne
+    @ManyToOne()
+    @Cascade(org.hibernate.annotations.CascadeType.SAVE_UPDATE)
     @JoinColumn(name="userId", referencedColumnName = "id")
     private UserSpotModel userId;
 
